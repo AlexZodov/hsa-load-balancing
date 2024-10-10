@@ -1,0 +1,40 @@
+services:
+  load_balancer:
+    build: ./docker/nginx
+    container_name: load_balancer
+    ports:
+    - "8080:80"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 5s
+      retries: 3
+  
+  uk_server:
+    image: httpd:latest
+    container_name: uk_server
+    volumes:
+      - ./images:/usr/local/apache2/htdocs
+  
+  us_server1:
+    image: httpd:latest
+    container_name: us_server1
+    volumes:
+      - ./images:/usr/local/apache2/htdocs
+  
+  us_server2:
+    image: httpd:latest
+    container_name: us_server2
+    volumes:
+      - ./images:/usr/local/apache2/htdocs
+  
+  fallback_server:
+    image: httpd:latest
+    container_name: fallback_server
+    volumes:
+      - ./images:/usr/local/apache2/htdocs
+  
+  backup_server:
+    image: httpd:latest
+    container_name: backup_server
+    volumes:
+      - ./images:/usr/local/apache2/htdocs
